@@ -1,20 +1,67 @@
 package com.example.crud.service;
 
 import com.example.crud.repository.User;
-import org.springframework.stereotype.Component;
+import com.example.crud.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
+import java.util.Optional;
 
 
-
-@Service
+@Service //this annotation is used to indicate that class belongs to the service layer in an app
 public class UserService {
-    public List<User> hello() {
-        return List.of(
-                new User(1L,"Serega","serega@email.com","passwd", LocalDate.of(1999,5,1), 26),
-                new User(2L,"Matvey","matvey@email.com","passwd", LocalDate.of(2002,8,11), 24)
-        );
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User create(User user) {
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
+        if (optionalUser.isPresent()) {
+            throw new IllegalStateException("Email already exist");
+        }
+        user.setAge(Period.between(user.getBirthday(), LocalDate.now()).getYears());
+        return userRepository.save(user);
+    }
+
+
+    public void delete(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalStateException("User with " + id + " id not found");
+        }else{
+            userRepository.deleteById(id);
+        }
+
+    }
+
+    public void update(Long id, String email, String name) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalStateException("User with " + id + " id not found");
+        }
+        User user = optionalUser.get();
+
+        if (email != null && !email.equals(user.getEmail())) {
+            Optional<User> foundByEmail = userRepository.findByEmail(user.getEmail());
+            System.out.println(foundByEmail.isPresent());
+            System.out.println(user.getEmail());
+            System.out.println("Here");
+            if (foundByEmail.isPresent()) {
+                throw new IllegalStateException("Email already exist");
+            }
+            user.setEmail(email);
+        }
+        if (name != null && !name.equals(user.getName())) {
+            user.setName(name);
+        }
+        userRepository.save(user);
     }
 }

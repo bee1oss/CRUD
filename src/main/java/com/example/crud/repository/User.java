@@ -1,23 +1,33 @@
 package com.example.crud.repository;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
+@Entity //this annotation represent relational db tables
+@Table(name = "users") //we are using this annotation for our table name, this annotation used when our table name is not the same with our class name
 public class User {
+
+
+    @Id //it is for our pm key
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//its annotation says our hibernate , id is generating by db
     private Long id;
+    //@Column(name = "name") //uses when db column name and model name is not same.
     private String name;
     private String email;
-    private String password;
+    @Column(name = "birth")
     private LocalDate birthday;
     private Integer age;//-128 -- 127
 
-    public User(Long id, String name, String email, String password, LocalDate birthday, Integer age) {
+    public User(Long id, String name, String email, LocalDate birthday, Integer age) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.birthday = birthday;
         this.age = age;
     }
+    //empty constructor we need the for connection hibernate
+    //withour empty constructor hibernate not working correctly
     public User() {
 
     }
@@ -46,14 +56,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public LocalDate getBirthday() {
         return birthday;
     }
@@ -68,5 +70,17 @@ public class User {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", birthday=" + birthday +
+                ", age=" + age +
+                '}';
     }
 }

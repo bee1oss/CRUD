@@ -30,10 +30,11 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-<!--		<dependency>
+<!--when we run first time empty app , we are getting an errors because of this part.-->
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>-->
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
