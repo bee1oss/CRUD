@@ -28,7 +28,7 @@ public class User {
     }
     //empty constructor we need the for connection hibernate
     //withour empty constructor hibernate not working correctly
-    public User() {
+    public User(long l, String johnDoe, String mail, LocalDate localDate) {
 
     }
 

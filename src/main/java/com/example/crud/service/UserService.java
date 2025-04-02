@@ -3,6 +3,7 @@ package com.example.crud.service;
 import com.example.crud.repository.User;
 import com.example.crud.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -41,7 +42,7 @@ public class UserService {
         }
 
     }
-
+    @Transactional//this annotation giving us do transaction without userRep.save
     public void update(Long id, String email, String name) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()) {
@@ -50,10 +51,7 @@ public class UserService {
         User user = optionalUser.get();
 
         if (email != null && !email.equals(user.getEmail())) {
-            Optional<User> foundByEmail = userRepository.findByEmail(user.getEmail());
-            System.out.println(foundByEmail.isPresent());
-            System.out.println(user.getEmail());
-            System.out.println("Here");
+            Optional<User> foundByEmail = userRepository.findByEmail(email);
             if (foundByEmail.isPresent()) {
                 throw new IllegalStateException("Email already exist");
             }
@@ -62,6 +60,6 @@ public class UserService {
         if (name != null && !name.equals(user.getName())) {
             user.setName(name);
         }
-        userRepository.save(user);
+        //userRepository.save(user);
     }
 }
